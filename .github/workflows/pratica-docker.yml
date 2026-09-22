@@ -1,0 +1,49 @@
+name: Pratica 03 Imagens Docker
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  construir-executar-e-medir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Baixar o projeto
+        uses: actions/checkout@v4
+
+      - name: Executar todas as etapas da pratica
+        run: bash scripts/run-all.sh
+
+      - name: Publicar resumo dos resultados
+        if: always()
+        run: |
+          {
+            echo "## Pratica 03 - Resultados"
+            echo
+            echo "### Imagens de ciencia de dados"
+            echo '```text'
+            cat evidencias/06-imagens-e-tamanhos.txt 2>/dev/null || true
+            echo '```'
+            echo
+            echo "### Tempos de construcao"
+            echo '```text'
+            cat evidencias/07-comparacao-tempos.txt 2>/dev/null || true
+            echo '```'
+            echo
+            echo "### Execucao do DataFrame"
+            echo '```text'
+            cat evidencias/03-python-pandas-ideal-execucao.txt 2>/dev/null || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Salvar evidencias da execucao
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-pratica-03
+          path: evidencias/
+          if-no-files-found: warn
+

@@ -1,0 +1,6 @@
+evidencias/*.txt
+evidencias/*.log
+!evidencias/.gitkeep
+__pycache__/
+*.pyc
+
