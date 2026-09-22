@@ -30,8 +30,13 @@ build_and_log \
   "$repo_root/ping-google-image" \
   "$evidence_dir/tempo-ping-google.txt"
 
-docker run --name ping-google-container ping-google \
+set +e
+docker run --name ping-google-container ping-google 2>&1 \
   | tee "$evidence_dir/01-ping-google-execucao.txt"
+ping_exit_code="${PIPESTATUS[0]}"
+set -e
+echo "codigo_saida_ping=$ping_exit_code" \
+  | tee -a "$evidence_dir/01-ping-google-execucao.txt"
 
 build_and_log \
   python-pandas \
